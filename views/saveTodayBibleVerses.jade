@@ -1,0 +1,21 @@
+doctype html
+html
+  head
+    title 삼시묵상 오늘의 말씀 업로드
+    meta(charset='utf-8')
+  body
+    form(action='/saveBibleVerses_receiver' method='post')
+      p
+        label 년 &nbsp
+        input(type='text' name='year')
+      p
+        label 월 &nbsp
+        input(type='text' name='month')
+      p
+        label 일 &nbsp
+        input(type='text' name='day')
+      p
+        label 오늘의 말씀 <br>
+        textarea(name='bibleverses')
+      p
+        input(type='submit')

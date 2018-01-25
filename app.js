@@ -2,6 +2,8 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var app = express();
+app.set('view engine', 'jade');
+app.set('views', './views');
 app.use(bodyParser.urlencoded( { extended: false }));
 
 mongoose.connect('mongodb://127.0.0.1:27017/Three_meditation_a_day');
@@ -42,8 +44,38 @@ app.post('/', function(req, res) {
   res.send('title: Hello');
 });
 
-app.post('/insert', function(req, res) {
+app.get('/saveTodayBibleVerses', function(req, res) {
+  res.render('saveTodayBibleVerses');
+});
 
+app.post('/saveBibleVerses_receiver', function(req, res) {
+  var _year = req.body.year
+  var _month = req.body.month
+  var _day = req.body.day
+  var _bibleverses = req.body.bibleverses
+
+  todayBibleVerses.findOneAndUpdate({'year':_year, 'month':_month, 'day':_day}, {$set:{'bibleverses':_bibleverses}}, function(err, doc){
+    if(err){
+        return res.status(500).json({'error': err});
+    }
+
+    if (doc == null) {
+      var bibleversesSave = new todayBibleVerses();
+      bibleversesSave.year = _year;
+      bibleversesSave.month = _month;
+      bibleversesSave.day = _day;
+      bibleversesSave.bibleverses = _bibleverses;
+
+      bibleversesSave.save(function(error) {
+          if(error){
+              res.json({result: 0});
+              return;
+          }
+      });
+    }
+
+    res.json({result: 1});
+  });
 });
 
 //오늘 묵상 말씀을 db에서 가져와서 보냄
