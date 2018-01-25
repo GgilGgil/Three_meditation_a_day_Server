@@ -18,6 +18,8 @@
   "homepage": "https://github.com/GgilGgil/Three_meditation_a_day_Server#readme",
   "dependencies": {
     "body-parser": "^1.18.2",
-    "express": "^4.16.2"
+    "express": "^4.16.2",
+    "mongodb": "^3.0.1",
+    "mongoose": "^5.0.1"
   }
 }
