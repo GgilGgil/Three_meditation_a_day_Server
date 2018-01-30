@@ -52,8 +52,8 @@ app.post('/', function(req, res) {
 });
 
 app.get('/saveTodayBibleVerses', function(req, res) {
+  console.log(req.headers.host)
   res.render('saveTodayBibleVerses');
-
 });
 
 app.post('/saveBibleVerses_receiver', function(req, res) {
@@ -203,8 +203,6 @@ app.get('/saveEveningMeditation', function(req, res) {
   var _month = req.query.month;
   var _day = req.query.day;
   var _evening = req.query.evening;
-
-  console.log(req.headers.host)
 
   meditation.findOneAndUpdate({'userid':_userId, 'year':_year, 'month':_month, 'day':_day}, {$set:{'evening':_evening}}, function(err, doc){
     if(err){
