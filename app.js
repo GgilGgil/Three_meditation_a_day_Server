@@ -83,13 +83,14 @@ app.post('/saveBibleVerses_receiver', function(req, res) {
       return res.status(404).json({'error': 'key not found'});
     }
 
-    var checkerJson = JSON.parse(checker);
+    console.log(checker);
+    // var checkerJson = JSON.parse(checker);
 
-    checkerPass = checkerJson.password;
-    checkerSalt = checkerJson.salt;
+    // checkerPass = checkerJson.password;
+    // checkerSalt = checkerJson.salt;
   });
 
-  console.log(checkerPass);
+  // console.log(checkerPass);
 
   return hasher({password:_pass, salt:checker.salt}, function(err, pass, salt, hash) {
     if(hash === checker.password) {
