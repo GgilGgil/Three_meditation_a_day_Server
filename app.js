@@ -201,7 +201,7 @@ app.get('/searchTodayMeditation', function(req, res) {
 //       meditationSave.year = _year;
 //       meditationSave.month = _month;
 //       meditationSave.day = _day;
-//       meditationSave.afternoon = _afternonn;
+//       meditationSave.afternoon = _afternoon;
 //
 //       meditationSave.save(function(error) {
 //           if(error){
@@ -268,8 +268,6 @@ app.post('/saveMorningMeditation', function(req, res) {
       meditationSave.month = _month;
       meditationSave.day = _day;
       meditationSave.morning = _morning;
-      meditationSave.afternoon = '';
-      meditationSave.evening = '';
 
       meditationSave.save(function(error) {
           if(error){
@@ -302,7 +300,7 @@ app.post('/saveAfternoonMeditation', function(req, res) {
       meditationSave.year = _year;
       meditationSave.month = _month;
       meditationSave.day = _day;
-      meditationSave.afternoon = _afternonn;
+      meditationSave.afternoon = _afternoon;
 
       meditationSave.save(function(error) {
           if(error){
