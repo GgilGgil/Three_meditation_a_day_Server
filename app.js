@@ -75,18 +75,18 @@ app.post('/saveBibleVerses_receiver', function(req, res) {
 
   var checkerPass = ''
   var checkerSalt = ''
-  checker.findOne({'type':'bibleversesSave'}, function(err, checker){
+  checker.findOne({'type':'bibleversesSave'}, function(err, data){
     if(err) {
       return res.status(500).json({'error': err});
     }
-    if(!checker) {
+    if(!data) {
       return res.status(404).json({'error': 'key not found'});
     }
-    checkerPass = checker.password;
-    checkerSalt = checker.salt;
-  });
+    console.log(data);
 
-  console.log(checkerPass);
+    checkerPass = data.password;
+    checkerSalt = data.salt;
+  });
 
   return hasher({password:_pass, salt:checker.salt}, function(err, pass, salt, hash) {
     if(hash === checker.password) {
