@@ -82,7 +82,7 @@ app.post('/saveBibleVerses_receiver', function(req, res) {
       return res.status(404).json({'error': 'key not found'});
     }
 
-    var checkerJson = JSON.parser(checker);
+    var checkerJson = JSON.parse(checker);
 
     checkerPass = checkerJson.password;
     checkerSalt = checkerJson.salt;
