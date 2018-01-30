@@ -48,7 +48,8 @@ var meditation = mongoose.model('meditation', meditationSchema)
 
 var checkerSchema = mongoose.Schema({
   password: String,
-  salt: String
+  salt: String,
+  type: String
 },{
     versionKey: false
 });
