@@ -41,7 +41,7 @@ var meditation = mongoose.model('meditation', meditationSchema)
 
 app.post('/', function(req, res) {
   res.set('Content-Type', 'text/plain');
-  res.send('title: Hello');
+  res.send('title: Hello 삼시묵상');
 });
 
 app.get('/saveTodayBibleVerses', function(req, res) {
