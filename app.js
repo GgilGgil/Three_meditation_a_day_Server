@@ -73,8 +73,6 @@ app.post('/saveBibleVerses_receiver', function(req, res) {
   var _bibleverses = req.body.bibleverses
   var _pass = req.body.pass
 
-  var checkerPass = ''
-  var checkerSalt = ''
   checker.findOne({'type':'bibleversesSave'}, function(err, data){
     if(err) {
       return res.status(500).json({'error': err});
@@ -83,37 +81,34 @@ app.post('/saveBibleVerses_receiver', function(req, res) {
       return res.status(404).json({'error': 'key not found'});
     }
 
-    checkerPass = data.password;
-    checkerSalt = data.salt;
-  });
+    return hasher({password:_pass, salt:data.salt}, function(err, pass, salt, hash) {
+      if(hash === data.password) {
+        todayBibleVerses.findOneAndUpdate({'year':_year, 'month':_month, 'day':_day}, {$set:{'bibleverses':_bibleverses}}, function(err, doc){
+          if(err){
+              return res.status(500).json({'error': err});
+          }
 
-  return hasher({password:_pass, salt:checkerSalt}, function(err, pass, salt, hash) {
-    if(hash === checkerPass) {
-      todayBibleVerses.findOneAndUpdate({'year':_year, 'month':_month, 'day':_day}, {$set:{'bibleverses':_bibleverses}}, function(err, doc){
-        if(err){
-            return res.status(500).json({'error': err});
-        }
+          if (doc == null) {
+            var bibleversesSave = new todayBibleVerses();
+            bibleversesSave.year = _year;
+            bibleversesSave.month = _month;
+            bibleversesSave.day = _day;
+            bibleversesSave.bibleverses = _bibleverses;
 
-        if (doc == null) {
-          var bibleversesSave = new todayBibleVerses();
-          bibleversesSave.year = _year;
-          bibleversesSave.month = _month;
-          bibleversesSave.day = _day;
-          bibleversesSave.bibleverses = _bibleverses;
+            bibleversesSave.save(function(error) {
+                if(error){
+                    res.json({result: 0});
+                    return;
+                }
+            });
+          }
 
-          bibleversesSave.save(function(error) {
-              if(error){
-                  res.json({result: 0});
-                  return;
-              }
-          });
-        }
-
-        res.json({result: 1});
-      });
-    } else {
-      res.json({result: 0});
-    }
+          res.json({result: 1});
+        });
+      } else {
+        res.json({result: 0});
+      }
+    });
   });
 });
 
