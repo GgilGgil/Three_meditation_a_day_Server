@@ -1,12 +1,17 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
-var session = require('express-session')
+var bkfd2Password = require("pbkdf2-password");
+var hasher = bkfd2Password();
 var app = express();
 app.set('view engine', 'jade');
 app.set('views', './views');
 app.use(bodyParser.urlencoded( { extended: false }));
-app.use(session({secret: process.env.Three_meditation_a_day_pw}))
+
+var checker = {
+  password: 'Ioih/VjZ06ksUekkapggIcsn8yITXcnYaDUfhMUw9c8dMrFHRXpm0WjCZypr9hqTipTW+WJhsRAsnGAR84wS6pGcDo/7PTQoVFw09BJe9MGD3y7uIiYdh5vzCTEPUnm49iMdFxc8xDh34/29pmhn3zLAfWq567aletOyBzKw9ko=',
+  salt: 'i9/qN01dw0zHt178eDulU7+S7YAGq6E401v90ZPEYfgszlb7LOaXAfzrxJLHcMvvuPq9l+ClOIJOBoLcqXhasQ=='
+}
 
 mongoose.connect('mongodb://127.0.0.1:27017/Three_meditation_a_day');
 
@@ -48,6 +53,7 @@ app.post('/', function(req, res) {
 
 app.get('/saveTodayBibleVerses', function(req, res) {
   res.render('saveTodayBibleVerses');
+
 });
 
 app.post('/saveBibleVerses_receiver', function(req, res) {
@@ -55,30 +61,35 @@ app.post('/saveBibleVerses_receiver', function(req, res) {
   var _month = req.body.month
   var _day = req.body.day
   var _bibleverses = req.body.bibleverses
+  var _pass = req.body.pass
 
-console.log(secret)
+  return hasher({password:_pass, salt:checker.salt}, function(err, pass, salt, hash) {
+    if(hash === checker.password) {
+      todayBibleVerses.findOneAndUpdate({'year':_year, 'month':_month, 'day':_day}, {$set:{'bibleverses':_bibleverses}}, function(err, doc){
+        if(err){
+            return res.status(500).json({'error': err});
+        }
 
-  todayBibleVerses.findOneAndUpdate({'year':_year, 'month':_month, 'day':_day}, {$set:{'bibleverses':_bibleverses}}, function(err, doc){
-    if(err){
-        return res.status(500).json({'error': err});
-    }
+        if (doc == null) {
+          var bibleversesSave = new todayBibleVerses();
+          bibleversesSave.year = _year;
+          bibleversesSave.month = _month;
+          bibleversesSave.day = _day;
+          bibleversesSave.bibleverses = _bibleverses;
 
-    if (doc == null) {
-      var bibleversesSave = new todayBibleVerses();
-      bibleversesSave.year = _year;
-      bibleversesSave.month = _month;
-      bibleversesSave.day = _day;
-      bibleversesSave.bibleverses = _bibleverses;
+          bibleversesSave.save(function(error) {
+              if(error){
+                  res.json({result: 0});
+                  return;
+              }
+          });
+        }
 
-      bibleversesSave.save(function(error) {
-          if(error){
-              res.json({result: 0});
-              return;
-          }
+        res.json({result: 1});
       });
+    } else {
+      res.json({result: 0});
     }
-
-    res.json({result: 1});
   });
 });
 
