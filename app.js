@@ -84,8 +84,6 @@ app.get('/searchTodayBibleVerses', function(req, res) {
   var _month = req.query.month;
   var _day = req.query.day;
 
-  console.log(_year+", "+_month+", "+_day)
-
   todayBibleVerses.findOne({'year':_year, 'month':_month, 'day':_day}, function(err, book){
     if(err) {
       return res.status(500).json({'error': err});
