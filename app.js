@@ -78,7 +78,7 @@ app.post('/saveBibleVerses_receiver', function(req, res) {
     if(err) {
       return res.status(500).json({'error': err});
     }
-    if(!book) {
+    if(!checker) {
       return res.status(404).json({'error': 'key not found'});
     }
 
