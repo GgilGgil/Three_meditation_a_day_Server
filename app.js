@@ -8,10 +8,6 @@ app.set('view engine', 'jade');
 app.set('views', './views');
 app.use(bodyParser.urlencoded( { extended: false }));
 app.use(bodyParser.json());
-// var checker = {
-//   password: 'Ioih/VjZ06ksUekkapggIcsn8yITXcnYaDUfhMUw9c8dMrFHRXpm0WjCZypr9hqTipTW+WJhsRAsnGAR84wS6pGcDo/7PTQoVFw09BJe9MGD3y7uIiYdh5vzCTEPUnm49iMdFxc8xDh34/29pmhn3zLAfWq567aletOyBzKw9ko=',
-//   salt: 'i9/qN01dw0zHt178eDulU7+S7YAGq6E401v90ZPEYfgszlb7LOaXAfzrxJLHcMvvuPq9l+ClOIJOBoLcqXhasQ=='
-// }
 
 mongoose.connect('mongodb://127.0.0.1:27017/Three_meditation_a_day');
 
@@ -147,107 +143,6 @@ app.get('/searchTodayMeditation', function(req, res) {
   });
 });
 
-// //아침묵상 저장
-// app.get('/saveMorningMeditation', function(req, res) {
-//   var _userId = req.query.userid;
-//   var _year = req.query.year;
-//   var _month = req.query.month;
-//   var _day = req.query.day;
-//   var _morning = req.query.morning;
-//
-//   meditation.findOneAndUpdate({'userid':_userId, 'year':_year, 'month':_month, 'day':_day}, {$set:{'morning':_morning}}, function(err, doc){
-//     if(err){
-//         return res.status(500).json({'error': err});
-//     }
-//
-//     if (doc == null) {
-//       var meditationSave = new meditation();
-//       meditationSave.userid = _userId;
-//       meditationSave.year = _year;
-//       meditationSave.month = _month;
-//       meditationSave.day = _day;
-//       meditationSave.morning = _morning;
-//       meditationSave.afternoon = '';
-//       meditationSave.evening = '';
-//
-//       meditationSave.save(function(error) {
-//           if(error){
-//               res.json({result: 0});
-//               return;
-//           }
-//       });
-//     }
-//
-//     res.json({result: 1});
-//   });
-// });
-//
-// //점심묵상 저장
-// app.get('/saveAfternoonMeditation', function(req, res) {
-//   var _userId = req.query.userid;
-//   var _year = req.query.year;
-//   var _month = req.query.month;
-//   var _day = req.query.day;
-//   var _afternoon = req.query.afternoon;
-//
-//   meditation.findOneAndUpdate({'userid':_userId, 'year':_year, 'month':_month, 'day':_day}, {$set:{'afternoon':_afternoon}}, function(err, doc){
-//     if(err){
-//         return res.status(500).json({'error': err});
-//     }
-//
-//     if (doc == null) {
-//       var meditationSave = new meditation();
-//       meditationSave.userid = _userId;
-//       meditationSave.year = _year;
-//       meditationSave.month = _month;
-//       meditationSave.day = _day;
-//       meditationSave.afternoon = _afternoon;
-//
-//       meditationSave.save(function(error) {
-//           if(error){
-//               res.json({result: 0});
-//               return;
-//           }
-//       });
-//     }
-//
-//     res.json({result: 1});
-//   });
-// });
-//
-// //저녁묵상 저장
-// app.get('/saveEveningMeditation', function(req, res) {
-//   var _userId = req.query.userid;
-//   var _year = req.query.year;
-//   var _month = req.query.month;
-//   var _day = req.query.day;
-//   var _evening = req.query.evening;
-//
-//   meditation.findOneAndUpdate({'userid':_userId, 'year':_year, 'month':_month, 'day':_day}, {$set:{'evening':_evening}}, function(err, doc){
-//     if(err){
-//         return res.status(500).json({'error': err});
-//     }
-//
-//     if (doc == null) {
-//       var meditationSave = new meditation();
-//       meditationSave.userid = _userId;
-//       meditationSave.year = _year;
-//       meditationSave.month = _month;
-//       meditationSave.day = _day;
-//       meditationSave.evening = _evening;
-//
-//       meditationSave.save(function(error) {
-//           if(error){
-//               res.json({result: 0});
-//               return;
-//           }
-//       });
-//     }
-//
-//     res.json({result: 1});
-//   });
-// });
-
 //아침묵상 저장
 app.post('/saveMorningMeditation', function(req, res) {
   var _userId = req.body.userid;
@@ -255,9 +150,6 @@ app.post('/saveMorningMeditation', function(req, res) {
   var _month = req.body.month;
   var _day = req.body.day;
   var _morning = req.body.morning;
-
-  console.log(req.body)
-  console.log(_userId+', '+_year+', '+_month+', '+_day+', '+_morning);
 
   meditation.findOneAndUpdate({'userid':_userId, 'year':_year, 'month':_month, 'day':_day}, {$set:{'morning':_morning}}, function(err, doc){
     if(err){
@@ -292,8 +184,6 @@ app.post('/saveAfternoonMeditation', function(req, res) {
   var _day = req.body.day;
   var _afternoon = req.body.afternoon;
 
-console.log(_userId+', '+_year+', '+_month+', '+_day+', '+_afternoon);
-
   meditation.findOneAndUpdate({'userid':_userId, 'year':_year, 'month':_month, 'day':_day}, {$set:{'afternoon':_afternoon}}, function(err, doc){
     if(err){
         return res.status(500).json({'error': err});
@@ -326,8 +216,6 @@ app.post('/saveEveningMeditation', function(req, res) {
   var _month = req.body.month;
   var _day = req.body.day;
   var _evening = req.body.evening;
-
-console.log(_userId+', '+_year+', '+_month+', '+_day+', '+_evening);
 
   meditation.findOneAndUpdate({'userid':_userId, 'year':_year, 'month':_month, 'day':_day}, {$set:{'evening':_evening}}, function(err, doc){
     if(err){
