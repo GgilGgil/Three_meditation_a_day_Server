@@ -218,6 +218,6 @@ app.get('/saveEveningMeditation', function(req, res) {
   });
 });
 
-app.listen(3000, function() {
+app.listen(80, function() {
   console.log('Connected Three meditation a day Server!')
 });
