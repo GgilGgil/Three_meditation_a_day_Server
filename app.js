@@ -84,6 +84,8 @@ app.get('/searchTodayBibleVerses', function(req, res) {
   var _month = req.query.month;
   var _day = req.query.day;
 
+  console.log(_year+", "+_month+", "+_day)
+
   todayBibleVerses.findOne({'year':_year, 'month':_month, 'day':_day}, function(err, book){
     if(err) {
       return res.status(500).json({'error': err});
@@ -167,9 +169,7 @@ app.get('/saveAfternoonMeditation', function(req, res) {
       meditationSave.year = _year;
       meditationSave.month = _month;
       meditationSave.day = _day;
-      // meditationSave.morning = '';
       meditationSave.afternoon = _afternonn;
-      // meditationSave.evening = '';
 
       meditationSave.save(function(error) {
           if(error){
@@ -202,8 +202,6 @@ app.get('/saveEveningMeditation', function(req, res) {
       meditationSave.year = _year;
       meditationSave.month = _month;
       meditationSave.day = _day;
-      // meditationSave.morning = '';
-      // meditationSave.afternoon = '';
       meditationSave.evening = _evening;
 
       meditationSave.save(function(error) {
