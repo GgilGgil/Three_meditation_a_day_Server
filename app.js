@@ -46,6 +46,15 @@ var meditationSchema = mongoose.Schema({
 
 var meditation = mongoose.model('meditation', meditationSchema)
 
+var checkerSchema = mongoose.Schema({
+  password: String,
+  salt: String
+},{
+    versionKey: false
+});
+
+var checker = mongoose.model('checker', checkerSchema)
+
 app.post('/', function(req, res) {
   res.set('Content-Type', 'text/plain');
   res.send('title: Hello 삼시묵상');
@@ -62,6 +71,24 @@ app.post('/saveBibleVerses_receiver', function(req, res) {
   var _day = req.body.day
   var _bibleverses = req.body.bibleverses
   var _pass = req.body.pass
+
+  var checkerPass = ''
+  var checkerSalt = ''
+  checker.findOne({'type':'bibleversesSave'}, function(err, checker){
+    if(err) {
+      return res.status(500).json({'error': err});
+    }
+    if(!book) {
+      return res.status(404).json({'error': 'key not found'});
+    }
+
+    var checkerJson = JSON.parser(checker);
+
+    checkerPass = checkerJson.password;
+    checkerSalt = checkerJson.salt;
+  });
+
+  console.log(checkerPass);
 
   return hasher({password:_pass, salt:checker.salt}, function(err, pass, salt, hash) {
     if(hash === checker.password) {
