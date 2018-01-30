@@ -86,6 +86,9 @@ app.post('/saveBibleVerses_receiver', function(req, res) {
 
     checkerPass = data.password;
     checkerSalt = data.salt;
+
+    console.log(checkerPass);
+    console.log(checkerSalt);
   });
 
   return hasher({password:_pass, salt:checker.salt}, function(err, pass, salt, hash) {
