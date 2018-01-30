@@ -82,17 +82,13 @@ app.post('/saveBibleVerses_receiver', function(req, res) {
     if(!data) {
       return res.status(404).json({'error': 'key not found'});
     }
-    console.log(data);
 
     checkerPass = data.password;
     checkerSalt = data.salt;
-
-    console.log(checkerPass);
-    console.log(checkerSalt);
   });
 
-  return hasher({password:_pass, salt:checker.salt}, function(err, pass, salt, hash) {
-    if(hash === checker.password) {
+  return hasher({password:_pass, salt:checkerSalt}, function(err, pass, salt, hash) {
+    if(hash === checkerPass) {
       todayBibleVerses.findOneAndUpdate({'year':_year, 'month':_month, 'day':_day}, {$set:{'bibleverses':_bibleverses}}, function(err, doc){
         if(err){
             return res.status(500).json({'error': err});
