@@ -52,7 +52,7 @@ app.post('/', function(req, res) {
 });
 
 app.get('/saveTodayBibleVerses', function(req, res) {
-  console.log(req.headers.host)
+  console.log(req.headers.host);
   res.render('saveTodayBibleVerses');
 });
 
