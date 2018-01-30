@@ -204,6 +204,8 @@ app.get('/saveEveningMeditation', function(req, res) {
   var _day = req.query.day;
   var _evening = req.query.evening;
 
+  console.log(req.headers.host)
+
   meditation.findOneAndUpdate({'userid':_userId, 'year':_year, 'month':_month, 'day':_day}, {$set:{'evening':_evening}}, function(err, doc){
     if(err){
         return res.status(500).json({'error': err});
