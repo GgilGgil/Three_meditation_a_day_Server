@@ -256,6 +256,7 @@ app.post('/saveMorningMeditation', function(req, res) {
   var _day = req.body.day;
   var _morning = req.body.morning;
 
+  console.log(req.body)
   console.log(_userId+', '+_year+', '+_month+', '+_day+', '+_morning);
 
   meditation.findOneAndUpdate({'userid':_userId, 'year':_year, 'month':_month, 'day':_day}, {$set:{'morning':_morning}}, function(err, doc){
