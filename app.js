@@ -1,10 +1,12 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
+var session = require('express-session')
 var app = express();
 app.set('view engine', 'jade');
 app.set('views', './views');
 app.use(bodyParser.urlencoded( { extended: false }));
+app.use(session({secret: process.env.Three_meditation_a_day_pw}))
 
 mongoose.connect('mongodb://127.0.0.1:27017/Three_meditation_a_day');
 
@@ -53,6 +55,8 @@ app.post('/saveBibleVerses_receiver', function(req, res) {
   var _month = req.body.month
   var _day = req.body.day
   var _bibleverses = req.body.bibleverses
+
+console.log(secret)
 
   todayBibleVerses.findOneAndUpdate({'year':_year, 'month':_month, 'day':_day}, {$set:{'bibleverses':_bibleverses}}, function(err, doc){
     if(err){
