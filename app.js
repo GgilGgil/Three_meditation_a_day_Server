@@ -256,6 +256,8 @@ app.post('/saveMorningMeditation', function(req, res) {
   var _day = req.body.day;
   var _morning = req.body.morning;
 
+  console.log(_userId+', '+_year+', '+_month+', '+_day+', '+_morning);
+
   meditation.findOneAndUpdate({'userid':_userId, 'year':_year, 'month':_month, 'day':_day}, {$set:{'morning':_morning}}, function(err, doc){
     if(err){
         return res.status(500).json({'error': err});
@@ -289,6 +291,8 @@ app.post('/saveAfternoonMeditation', function(req, res) {
   var _day = req.body.day;
   var _afternoon = req.body.afternoon;
 
+console.log(_userId+', '+_year+', '+_month+', '+_day+', '+_afternoon);
+
   meditation.findOneAndUpdate({'userid':_userId, 'year':_year, 'month':_month, 'day':_day}, {$set:{'afternoon':_afternoon}}, function(err, doc){
     if(err){
         return res.status(500).json({'error': err});
@@ -321,6 +325,8 @@ app.post('/saveEveningMeditation', function(req, res) {
   var _month = req.body.month;
   var _day = req.body.day;
   var _evening = req.body.evening;
+
+console.log(_userId+', '+_year+', '+_month+', '+_day+', '+_evening);
 
   meditation.findOneAndUpdate({'userid':_userId, 'year':_year, 'month':_month, 'day':_day}, {$set:{'evening':_evening}}, function(err, doc){
     if(err){
