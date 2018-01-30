@@ -63,7 +63,7 @@ app.post('/saveBibleVerses_receiver', function(req, res) {
   var _bibleverses = req.body.bibleverses
   var _pass = req.body.pass
 
-  hasher({password:_pass, salt:checker.salt}, function(err, pass, salt, hash) {
+  return hasher({password:_pass, salt:checker.salt}, function(err, pass, salt, hash) {
     if(hash === checker.password) {
       todayBibleVerses.findOneAndUpdate({'year':_year, 'month':_month, 'day':_day}, {$set:{'bibleverses':_bibleverses}}, function(err, doc){
         if(err){
