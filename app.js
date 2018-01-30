@@ -8,10 +8,10 @@ app.set('view engine', 'jade');
 app.set('views', './views');
 app.use(bodyParser.urlencoded( { extended: false }));
 
-var checker = {
-  password: 'Ioih/VjZ06ksUekkapggIcsn8yITXcnYaDUfhMUw9c8dMrFHRXpm0WjCZypr9hqTipTW+WJhsRAsnGAR84wS6pGcDo/7PTQoVFw09BJe9MGD3y7uIiYdh5vzCTEPUnm49iMdFxc8xDh34/29pmhn3zLAfWq567aletOyBzKw9ko=',
-  salt: 'i9/qN01dw0zHt178eDulU7+S7YAGq6E401v90ZPEYfgszlb7LOaXAfzrxJLHcMvvuPq9l+ClOIJOBoLcqXhasQ=='
-}
+// var checker = {
+//   password: 'Ioih/VjZ06ksUekkapggIcsn8yITXcnYaDUfhMUw9c8dMrFHRXpm0WjCZypr9hqTipTW+WJhsRAsnGAR84wS6pGcDo/7PTQoVFw09BJe9MGD3y7uIiYdh5vzCTEPUnm49iMdFxc8xDh34/29pmhn3zLAfWq567aletOyBzKw9ko=',
+//   salt: 'i9/qN01dw0zHt178eDulU7+S7YAGq6E401v90ZPEYfgszlb7LOaXAfzrxJLHcMvvuPq9l+ClOIJOBoLcqXhasQ=='
+// }
 
 mongoose.connect('mongodb://127.0.0.1:27017/Three_meditation_a_day');
 
