@@ -174,99 +174,147 @@ save.post('/bibleberses_receiver', function(req, res) {
 //아침묵상 저장
 save.post('/morningmeditation', function(req, res) {
   var _userId = req.body.userid;
+  var _pass = req.body.pass;
   var _year = req.body.year;
   var _month = req.body.month;
   var _day = req.body.day;
   var _morning = req.body.morning;
 
-  meditation.findOneAndUpdate({'userid':_userId, 'year':_year, 'month':_month, 'day':_day}, {$set:{'morning':_morning}}, function(err, doc){
-    if(err){
-        return res.status(500).json({'error': err});
+  userInfo.findOne({'userid':_userId}, function(err, data){
+    if(err) {
+      return res.status(500).json({'error': err});
+    }
+    if(!data) {
+      return res.status(404).json({'error': 'key not found'});
     }
 
-    if (doc == null) {
-      var meditationSave = new meditation();
-      meditationSave.userid = _userId;
-      meditationSave.year = _year;
-      meditationSave.month = _month;
-      meditationSave.day = _day;
-      meditationSave.morning = _morning;
-
-      meditationSave.save(function(error) {
-          if(error){
-              res.json({result: 0});
-              return;
+    return hasher({password:_pass, salt:data.salt}, function(err, pass, salt, hash) {
+      if(hash === data.password) {
+        meditation.findOneAndUpdate({'userid':_userId, 'year':_year, 'month':_month, 'day':_day}, {$set:{'morning':_morning}}, function(err, doc){
+          if(err){
+              return res.status(500).json({'error': err});
           }
-      });
-    }
 
-    res.json({result: 1});
+          if (doc == null) {
+            var meditationSave = new meditation();
+            meditationSave.userid = _userId;
+            meditationSave.year = _year;
+            meditationSave.month = _month;
+            meditationSave.day = _day;
+            meditationSave.morning = _morning;
+
+            meditationSave.save(function(error) {
+                if(error){
+                    res.json({result: 0});
+                    return;
+                }
+            });
+          }
+
+          res.json({result: 1});
+        });
+      } else {
+        res.json({result: 0});
+      }
+    });
   });
 });
 
 //점심묵상 저장
 save.post('/afternoonmeditation', function(req, res) {
   var _userId = req.body.userid;
+  var _pass = req.body.pass;
   var _year = req.body.year;
   var _month = req.body.month;
   var _day = req.body.day;
   var _afternoon = req.body.afternoon;
 
-  meditation.findOneAndUpdate({'userid':_userId, 'year':_year, 'month':_month, 'day':_day}, {$set:{'afternoon':_afternoon}}, function(err, doc){
-    if(err){
-        return res.status(500).json({'error': err});
+  userInfo.findOne({'userid':_userId}, function(err, data){
+    if(err) {
+      return res.status(500).json({'error': err});
+    }
+    if(!data) {
+      return res.status(404).json({'error': 'key not found'});
     }
 
-    if (doc == null) {
-      var meditationSave = new meditation();
-      meditationSave.userid = _userId;
-      meditationSave.year = _year;
-      meditationSave.month = _month;
-      meditationSave.day = _day;
-      meditationSave.afternoon = _afternoon;
-
-      meditationSave.save(function(error) {
-          if(error){
-              res.json({result: 0});
-              return;
+    return hasher({password:_pass, salt:data.salt}, function(err, pass, salt, hash) {
+      if(hash === data.password) {
+        meditation.findOneAndUpdate({'userid':_userId, 'year':_year, 'month':_month, 'day':_day}, {$set:{'afternoon':_afternoon}}, function(err, doc){
+          if(err){
+              return res.status(500).json({'error': err});
           }
-      });
-    }
 
-    res.json({result: 1});
+          if (doc == null) {
+            var meditationSave = new meditation();
+            meditationSave.userid = _userId;
+            meditationSave.year = _year;
+            meditationSave.month = _month;
+            meditationSave.day = _day;
+            meditationSave.afternoon = _afternoon;
+
+            meditationSave.save(function(error) {
+                if(error){
+                    res.json({result: 0});
+                    return;
+                }
+            });
+          }
+
+          res.json({result: 1});
+        });
+      } else {
+        res.json({result: 0});
+      }
+    });
   });
 });
 
 //저녁묵상 저장
 save.post('/eveningmeditation', function(req, res) {
   var _userId = req.body.userid;
+  var _pass = req.body.pass;
   var _year = req.body.year;
   var _month = req.body.month;
   var _day = req.body.day;
   var _evening = req.body.evening;
 
-  meditation.findOneAndUpdate({'userid':_userId, 'year':_year, 'month':_month, 'day':_day}, {$set:{'evening':_evening}}, function(err, doc){
-    if(err){
-        return res.status(500).json({'error': err});
+  userInfo.findOne({'userid':_userId}, function(err, data){
+    if(err) {
+      return res.status(500).json({'error': err});
+    }
+    if(!data) {
+      return res.status(404).json({'error': 'key not found'});
     }
 
-    if (doc == null) {
-      var meditationSave = new meditation();
-      meditationSave.userid = _userId;
-      meditationSave.year = _year;
-      meditationSave.month = _month;
-      meditationSave.day = _day;
-      meditationSave.evening = _evening;
-
-      meditationSave.save(function(error) {
-          if(error){
-              res.json({result: 0});
-              return;
+    return hasher({password:_pass, salt:data.salt}, function(err, pass, salt, hash) {
+      if(hash === data.password) {
+        meditation.findOneAndUpdate({'userid':_userId, 'year':_year, 'month':_month, 'day':_day}, {$set:{'evening':_evening}}, function(err, doc){
+          if(err){
+              return res.status(500).json({'error': err});
           }
-      });
-    }
 
-    res.json({result: 1});
+          if (doc == null) {
+            var meditationSave = new meditation();
+            meditationSave.userid = _userId;
+            meditationSave.year = _year;
+            meditationSave.month = _month;
+            meditationSave.day = _day;
+            meditationSave.evening = _evening;
+
+            meditationSave.save(function(error) {
+                if(error){
+                    res.json({result: 0});
+                    return;
+                }
+            });
+          }
+
+          res.json({result: 1});
+        });
+      } else {
+        res.json({result: 0});
+      }
+    });
   });
 });
 
