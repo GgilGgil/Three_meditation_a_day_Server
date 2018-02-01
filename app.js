@@ -190,10 +190,6 @@ save.post('/morningmeditation', function(req, res) {
 
     return hasher({password:_pass, salt:data.salt}, function(err, pass, salt, hash) {
 
-      console.log(hash);
-      console.log('======================================');
-      console.log(data.password);
-
       if(hash === data.password) {
         meditation.findOneAndUpdate({'userid':_userId, 'year':_year, 'month':_month, 'day':_day}, {$set:{'morning':_morning}}, function(err, doc){
           if(err){
@@ -333,6 +329,9 @@ user.post('/register', function(req, res) {
     }
 
     if(!data) {
+
+      console.log(_userId+' register!!!');
+
       var _pass = _userId+'token'+_accessToken;
 
       return hasher({password:_pass}, function(err, pass, salt, hash) {
