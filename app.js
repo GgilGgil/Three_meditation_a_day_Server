@@ -2,21 +2,28 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var bkfd2Password = require("pbkdf2-password");
+
 var hasher = bkfd2Password();
 var app = express();
+var router = express.Router();
+
 app.set('view engine', 'jade');
 app.set('views', './views');
+
 app.use(bodyParser.urlencoded( { extended: false }));
 app.use(bodyParser.json());
 
+//mongodb connect
 mongoose.connect('mongodb://127.0.0.1:27017/Three_meditation_a_day');
 
 var db = mongoose.connection;
+
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {
   // we're connected!
 });
 
+//mongoose schema 정의
 var todayBibleVersesSchema = mongoose.Schema({
   year: Number,
   month: Number,
@@ -24,9 +31,7 @@ var todayBibleVersesSchema = mongoose.Schema({
   bibleverses:String
 },{
     versionKey: false
-});
-
-var todayBibleVerses = mongoose.model('todaybibleverses', todayBibleVersesSchema);
+}); //오늘의 말씀 schema
 
 var meditationSchema = mongoose.Schema({
   userid: String,
@@ -38,9 +43,7 @@ var meditationSchema = mongoose.Schema({
   evening: {type:String, default:''}
 },{
     versionKey: false
-});
-
-var meditation = mongoose.model('meditation', meditationSchema)
+}); //묵상 schema
 
 var checkerSchema = mongoose.Schema({
   password: String,
@@ -48,21 +51,66 @@ var checkerSchema = mongoose.Schema({
   type: String
 },{
     versionKey: false
-});
+}); //checker schema
 
-var checker = mongoose.model('checker', checkerSchema)
+var todayBibleVerses = mongoose.model('todaybibleverses', todayBibleVersesSchema);
+var meditation = mongoose.model('meditation', meditationSchema);
+var checker = mongoose.model('checker', checkerSchema);
 
 app.post('/', function(req, res) {
   res.set('Content-Type', 'text/plain');
   res.send('title: Hello 삼시묵상');
 });
 
-app.get('/saveTodayBibleVerses', function(req, res) {
+var search = express.Router();
+var save = express.Router();
+
+app.use('/search', search);
+app.use('/save', save);
+
+//오늘 묵상 말씀을 db에서 가져와서 보냄
+search.get('/todaybibleverses', function(req, res) {
+  var _year = req.query.year;
+  var _month = req.query.month;
+  var _day = req.query.day;
+
+  todayBibleVerses.findOne({'year':_year, 'month':_month, 'day':_day}, function(err, book){
+    if(err) {
+      return res.status(500).json({'error': err});
+    }
+    if(!book) {
+      return res.status(404).json({'error': 'data not found'})
+    }
+    res.json(book);
+  });
+});
+
+//오늘 저장한 묵상 내용을 db에서 가져와서 보냄
+search.get('/todaymeditation', function(req, res) {
+  var _userId = req.query.userid
+  var _year = req.query.year;
+  var _month = req.query.month;
+  var _day = req.query.day;
+
+  meditation.findOne({'userid':_userId, 'year':_year, 'month':_month, 'day':_day}, function(err, book){
+    if(err) {
+      return res.status(500).json({'error': err});
+    }
+    if(!book) {
+      return res.status(404).json({'error': 'data not found'})
+    }
+    res.json(book);
+  });
+});
+
+//오늘의 묵상 내용 저장 화면
+save.get('/todaybibleverses', function(req, res) {
   res.render('saveTodayBibleVerses');
 
 });
 
-app.post('/saveBibleVerses_receiver', function(req, res) {
+//오늘의 묵상 저장 receiver
+save.post('/bibleberses_receiver', function(req, res) {
   var _year = req.body.year
   var _month = req.body.month
   var _day = req.body.day
@@ -108,43 +156,8 @@ app.post('/saveBibleVerses_receiver', function(req, res) {
   });
 });
 
-//오늘 묵상 말씀을 db에서 가져와서 보냄
-app.get('/searchTodayBibleVerses', function(req, res) {
-  var _year = req.query.year;
-  var _month = req.query.month;
-  var _day = req.query.day;
-
-  todayBibleVerses.findOne({'year':_year, 'month':_month, 'day':_day}, function(err, book){
-    if(err) {
-      return res.status(500).json({'error': err});
-    }
-    if(!book) {
-      return res.status(404).json({'error': 'data not found'})
-    }
-    res.json(book);
-  });
-});
-
-//오늘 저장한 묵상 내용을 db에서 가져와서 보냄
-app.get('/searchTodayMeditation', function(req, res) {
-  var _userId = req.query.userid
-  var _year = req.query.year;
-  var _month = req.query.month;
-  var _day = req.query.day;
-
-  meditation.findOne({'userid':_userId, 'year':_year, 'month':_month, 'day':_day}, function(err, book){
-    if(err) {
-      return res.status(500).json({'error': err});
-    }
-    if(!book) {
-      return res.status(404).json({'error': 'data not found'})
-    }
-    res.json(book);
-  });
-});
-
 //아침묵상 저장
-app.post('/saveMorningMeditation', function(req, res) {
+save.post('/morningmeditation', function(req, res) {
   var _userId = req.body.userid;
   var _year = req.body.year;
   var _month = req.body.month;
@@ -177,7 +190,7 @@ app.post('/saveMorningMeditation', function(req, res) {
 });
 
 //점심묵상 저장
-app.post('/saveAfternoonMeditation', function(req, res) {
+save.post('/afternoonmeditation', function(req, res) {
   var _userId = req.body.userid;
   var _year = req.body.year;
   var _month = req.body.month;
@@ -210,7 +223,7 @@ app.post('/saveAfternoonMeditation', function(req, res) {
 });
 
 //저녁묵상 저장
-app.post('/saveEveningMeditation', function(req, res) {
+save.post('/eveningmeditation', function(req, res) {
   var _userId = req.body.userid;
   var _year = req.body.year;
   var _month = req.body.month;
