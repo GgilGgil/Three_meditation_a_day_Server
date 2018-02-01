@@ -53,20 +53,35 @@ var checkerSchema = mongoose.Schema({
     versionKey: false
 }); //checker schema
 
+var userSchema = mongoose.Schema({
+  userid: String,
+  password: String,
+  salt: String,
+},{
+    versionKey: false
+}); //register schema
+
 var todayBibleVerses = mongoose.model('todaybibleverses', todayBibleVersesSchema);
 var meditation = mongoose.model('meditation', meditationSchema);
 var checker = mongoose.model('checker', checkerSchema);
+var userInfo = mongoose.model('user', userSchema);
+
+var search = express.Router();
+var save = express.Router();
+var user = express.Router();
+
+app.use('/search', search);
+app.use('/save', save);
+app.use('/user', user);
+
+var usercheck = function(userid) {
+
+};
 
 app.post('/', function(req, res) {
   res.set('Content-Type', 'text/plain');
   res.send('title: Hello 삼시묵상');
 });
-
-var search = express.Router();
-var save = express.Router();
-
-app.use('/search', search);
-app.use('/save', save);
 
 //오늘 묵상 말씀을 db에서 가져와서 보냄
 search.get('/todaybibleverses', function(req, res) {
@@ -252,6 +267,37 @@ save.post('/eveningmeditation', function(req, res) {
     }
 
     res.json({result: 1});
+  });
+});
+
+user.post('/register', function(req, res) {
+  var _userId = req.body.userid;
+  var _accessToken = req.body.accesstoken;
+
+  userInfo.findOne({'userid':_userId}, function(err, data){
+    if(err) {
+      return res.status(500).json({'error': err});
+    }
+
+    if(!data) {
+      var _pass = _userId+'token'+_accessToken;
+
+      return hasher({password:_pass}, function(err, pass, salt, hash) {
+        var userSave = new userInfo();
+        userSave.userid = _userId;
+        userSave.password = hash;
+        userSave.salt = salt;
+
+        userSave.save(function(error) {
+            if(error){
+                res.json({result: 0});
+                return;
+            } else {
+              res.json({result: 1});
+            }
+        });
+      });
+    }
   });
 });
 
