@@ -118,7 +118,7 @@ search.get('/todaymeditation', function(req, res) {
   });
 });
 
-search.get('currentMonthMeditation', function(req, res) {
+search.get('/currentMonthMeditation', function(req, res) {
   var _userId = req.query.userid
   var _year = req.query.year;
   var _month = req.query.month;
