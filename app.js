@@ -123,7 +123,7 @@ search.get('/currentMonthMeditation', function(req, res) {
   var _year = req.query.year;
   var _month = req.query.month;
 
-  meditation.find({'userid':_userId, 'year':_year, 'month':_month}, {'_id':0, 'userid':1, 'year':0, 'month':0, 'day':1, 'morning':1, 'afternoon':1, 'evening':1}, function(err, book){
+  meditation.find({'userid':_userId, 'year':_year, 'month':_month}, {}, function(err, book){
     if(err) {
       return res.status(500).json({'error': err});
     }
