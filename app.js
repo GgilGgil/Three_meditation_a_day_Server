@@ -118,6 +118,22 @@ search.get('/todaymeditation', function(req, res) {
   });
 });
 
+search.get('currentMonthMeditation', function(req, res) {
+  var _userId = req.query.userid
+  var _year = req.query.year;
+  var _month = req.query.month;
+
+  meditation.find({'userid':_userId, 'year':_year, 'month':_month}, function(err, book){
+    if(err) {
+      return res.status(500).json({'error': err});
+    }
+    if(!book) {
+      return res.status(404).json({'error': 'data not found'})
+    }
+    res.json(book);
+  });
+});
+
 //오늘의 묵상 내용 저장 화면
 save.get('/todaybibleverses', function(req, res) {
   res.render('saveTodayBibleVerses');
