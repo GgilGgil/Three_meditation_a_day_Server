@@ -346,8 +346,6 @@ user.post('/register', function(req, res) {
 
     if(!data) {
 
-      console.log(_userId+' register!!!');
-
       var _pass = _userId+'token'+_accessToken;
 
       return hasher({password:_pass}, function(err, pass, salt, hash) {
@@ -359,7 +357,6 @@ user.post('/register', function(req, res) {
         userSave.save(function(error) {
             if(error){
                 res.json({result: 0});
-                return;
             } else {
               res.json({result: 1});
             }
